@@ -17,6 +17,27 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/outbound_call', methods=['GET','POST'])
+def outbound_call():
+    num = validateNum(request.form['phoneNum']);
+    if (num == -1):
+        return render_template('index.html', status="Please enter a valid number : +1XXXXXXXXXX")
+    call = client.calls.create(to=num,  # Any phone number
+                           from_="+12565308617", # Must be a valid Twilio number
+                           url=mysite+"phonebuzz")
+    return render_template('index.html', status="A call to "+num + " has been sent ...")
+    # return 
+
+
+def validateNum(str):
+    if str[0:2] != '+1' and len(str) == 10:
+        return "+1"+str
+    elif str[0:2] == '+1' and len(str) == 12:
+        return str
+    else:
+        return -1
+
+
 @app.route('/phonebuzz', methods=['GET','POST'])
 def phoneBuzz():
     resp = twilio.twiml.Response()
