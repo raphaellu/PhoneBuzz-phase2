@@ -22,11 +22,11 @@ def outbound_call():
     num = validateNum(request.form['phoneNum']);
     # if num is not valid, raise error msg
     if (num == -1):
-        return render_template('index.html', status="Please enter a valid number : +1XXXXXXXXXX")
+        return render_template('index.html', status=-1, message="Please enter a valid number : +1XXXXXXXXXX")
     call = client.calls.create(to=num, 
                            from_="+12565308617", 
                            url=mysite+"phonebuzz")
-    return render_template('index.html', status="A call to "+num + " has been sent ...")
+    return render_template('index.html', status=1, message="A call to "+num + " has been sent ...")
 
 # validate if a phone number is valid
 def validateNum(str):
