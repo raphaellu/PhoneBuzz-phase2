@@ -7,7 +7,7 @@ account_sid = "AC603bdae185464326b59f75982befc9c5" # Your Account SID from www.t
 auth_token  = "65a6f6eb6b11237fbdb9c073b8ea4b99"  # Your Auth Token from www.twilio.com/console
 client = TwilioRestClient(account_sid, auth_token)
 validator = RequestValidator(auth_token)
-mysite = "http://phonebuzz-phase2-lelu.herokuapp.com/"
+mysite = "http://phonebuzz-phase1-lelu.herokuapp.com/"
 # The X-Twilio-Signature header attached to the request
 twilio_signature = 'RSOYDt4T1cUTdK1PDd93/VVr8B8='
 
