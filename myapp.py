@@ -7,7 +7,7 @@ account_sid = "AC603bdae185464326b59f75982befc9c5" # Your Account SID from www.t
 auth_token  = "65a6f6eb6b11237fbdb9c073b8ea4b99"  # Your Auth Token from www.twilio.com/console
 client = TwilioRestClient(account_sid, auth_token)
 validator = RequestValidator(auth_token)
-mysite = "http://phonebuzz-phase1-lelu.herokuapp.com/"
+mysite = "http://phonebuzz-phase2-lelu.herokuapp.com/"
 # The X-Twilio-Signature header attached to the request
 twilio_signature = 'RSOYDt4T1cUTdK1PDd93/VVr8B8='
 
@@ -20,20 +20,23 @@ def index():
 @app.route('/outbound_call', methods=['GET','POST'])
 def outbound_call():
     num = validateNum(request.form['phoneNum']);
+    # if num is not valid, raise error msg
     if (num == -1):
         return render_template('index.html', status="Please enter a valid number : +1XXXXXXXXXX")
-    call = client.calls.create(to=num,  # Any phone number
-                           from_="+12565308617", # Must be a valid Twilio number
+    call = client.calls.create(to=num, 
+                           from_="+12565308617", 
                            url=mysite+"phonebuzz")
     return render_template('index.html', status="A call to "+num + " has been sent ...")
-    # return 
 
-
+# validate if a phone number is valid
 def validateNum(str):
+    # missing country code
     if str[0:2] != '+1' and len(str) == 10:
         return "+1"+str
+    # correctly formated    
     elif str[0:2] == '+1' and len(str) == 12:
         return str
+    # other cases return error
     else:
         return -1
 
@@ -49,23 +52,7 @@ def phoneBuzz():
 @app.route('/handle_input', methods=['GET','POST'])    
 def handle_input():
     nm = request.values.get('Digits', '')
-    # prepare the post request params for validation
-    # post_params = {
-    #     'CallSid': request.values.get('CallSid', ''),
-    #     'Caller': request.values.get('Caller', ''),
-    #     'Digits': nm,
-    #     'From': request.values.get('From', ''),
-    #     'To': request.values.get('To', '')
-    # }
     resp = twilio.twiml.Response()
-
-    # validate that the request is from Twilio
-    # if not validator.validate(mysite+"handle_input", post_params, twilio_signature):
-    #     print (post_params)
-    #     resp.say("You are not an authorized user. Sorry.")
-    #     return str(resp)
-
-    
     if nm.isdigit():  # if input is valid
         res = generatePhoneBuzz(int(nm))
         if (res == -1): # if the number is too large, ask for re-entering the num
